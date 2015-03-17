@@ -13,6 +13,7 @@
 		120D96CF1AB8786F00D4ABBC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 120D96CE1AB8786F00D4ABBC /* Images.xcassets */; };
 		120D96D21AB8786F00D4ABBC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120D96D01AB8786F00D4ABBC /* LaunchScreen.xib */; };
 		120D96DE1AB8786F00D4ABBC /* ColorPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120D96DD1AB8786F00D4ABBC /* ColorPickerViewTests.swift */; };
+		120D96E81AB8788E00D4ABBC /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120D96E71AB8788E00D4ABBC /* ColorPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		120D96D71AB8786F00D4ABBC /* ColorPickerViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ColorPickerViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		120D96DC1AB8786F00D4ABBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		120D96DD1AB8786F00D4ABBC /* ColorPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewTests.swift; sourceTree = "<group>"; };
+		120D96E71AB8788E00D4ABBC /* ColorPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				120D96CE1AB8786F00D4ABBC /* Images.xcassets */,
 				120D96D01AB8786F00D4ABBC /* LaunchScreen.xib */,
 				120D96C51AB8786F00D4ABBC /* Supporting Files */,
+				120D96E71AB8788E00D4ABBC /* ColorPickerView.swift */,
 			);
 			path = ColorPickerView;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 			files = (
 				120D96CA1AB8786F00D4ABBC /* ViewController.swift in Sources */,
 				120D96C81AB8786F00D4ABBC /* AppDelegate.swift in Sources */,
+				120D96E81AB8788E00D4ABBC /* ColorPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +343,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ColorPickerView/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -349,6 +354,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ColorPickerView/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
