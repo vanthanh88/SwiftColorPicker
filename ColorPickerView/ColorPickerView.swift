@@ -31,79 +31,74 @@ class ColorPickerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     
     //Public Varible
     ///Colors array
-    var colors: NSMutableArray!{
-        get{
-            return self.colors
-        }
-        set(newColors){
-            //set new colors
-            self.colors = newColors
-            //and reset color picker
-            self.resetColorPicker()
-        }
-    }
+    var colors: NSMutableArray!
     
     ///Layouting
-    var colorsPerRow: NSInteger{
-        get{
-            return self.colorsPerRow
-        }
-        set(newColorsPerRow){
-            
-            if newColorsPerRow < 1{
-                self.colorsPerRow = 1
-                self.resetColorPicker()
-                return
-            }
-            
-            self.colorsPerRow = newColorsPerRow
-            self.resetColorPicker()
-            
-        }
-    }
-    var colorCellPadding: CGFloat{
-        get{
-            return self.colorCellPadding
-        }
-        set(newColorCellPadding){
-            self.colorCellPadding = newColorCellPadding
-            if self.colorCellPadding < 0.0{
-                self.colorCellPadding = 0.0
-            }
-            
-            self.resetColorPicker()
-        }
-    }
+    var colorsPerRow: NSInteger!
+    
+    /// Padding 2 colors
+    var colorCellPadding: CGFloat!
+    
     //enabled highlight boder if true
-    var highlightSelection: Bool!{
-        get{
-            return self.highlightSelection
-        }
-        set(newHighlightSelection){
-            self.highlightSelection = newHighlightSelection
-            self.resetColorPicker()
-        }
+    var highlightSelection: Bool!
+    
+    var selectionBorderColor: UIColor?
+    
+    
+    //MARK: SETTER
+    func setColors(newColors: NSMutableArray?){
+        //set new colors
+        self.colors = newColors
+        //and reset color picker
+        self.resetColorPicker()
+        
+        println("delegate \(self.colorView.delegate) data source \(self.colorView.dataSource)")
     }
     
-    var selectionBorderColor: UIColor?{
-        get{
-            return self.selectionBorderColor
-        }
-        set(newSelectionBorderColor){
-            self.selectionBorderColor = newSelectionBorderColor
+    func setColorsPerRow(newColorsPerRow: NSInteger){
+    
+        if newColorsPerRow < 1{
+            self.colorsPerRow = 1
             self.resetColorPicker()
+            return
         }
+    
+        self.colorsPerRow = newColorsPerRow
+        self.resetColorPicker()
+    
     }
+    
+    func setColorCellPadding(newColorCellPadding: CGFloat){
+        self.colorCellPadding = newColorCellPadding
+        if self.colorCellPadding < 0.0{
+            self.colorCellPadding = 0.0
+        }
+    
+        self.resetColorPicker()
+    }
+    
+    func setHighlightSelection(newHighlightSelection: Bool){
+        self.highlightSelection = newHighlightSelection
+        self.resetColorPicker()
+    }
+    
+    func setSelectionBorderColor(newSelectionBorderColor: UIColor?){
+        self.selectionBorderColor = newSelectionBorderColor
+        self.resetColorPicker()
+    }
+    
     
     
     //MARK: Initial Methods
     override init() {
+        
         super.init()
         self.doInitialization()
         
     }
     ///Use when init from nib
     required init(coder aDecoder: NSCoder) {
+        
         super.init(coder: aDecoder)
         
         self.doInitialization()
@@ -111,6 +106,7 @@ class ColorPickerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     }
     ///init with frame
     override init(frame: CGRect) {
+        
         super.init(frame: frame)
         self.doInitialization()
     }
@@ -127,16 +123,14 @@ class ColorPickerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         
-        var cell: UICollectionViewCell?
-        //FIXME: FIX TOMORROW
-        cell = collectionView.dequeueReusableCellWithReuseIdentifier(kColorCellIdentifier, forIndexPath:indexPath) as? UICollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kColorCellIdentifier, forIndexPath:indexPath) as UICollectionViewCell
         
-        self.setColorCell(cell, selected: cell!.selected)
+        self.setColorCell(cell, selected: cell.selected)
         
-        cell?.backgroundColor = self.colors.objectAtIndex(indexPath.row) as? UIColor
+        cell.backgroundColor = self.colors.objectAtIndex(indexPath.row) as? UIColor
         
         
-        return cell!
+        return cell
         
     }
     
@@ -162,11 +156,15 @@ class ColorPickerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         
         self.selectedColor = self.colors.objectAtIndex(indexPath.row) as? UIColor
         
-        //FIXME: Fix tomorrow
-        self.delegate?.colorPickerView(self, didSelectColor: self.colors.objectAtIndex(indexPath.row) as UIColor)
+        if let __delegate = self.delegate{
+            __delegate.colorPickerView(self, didSelectColor: self.colors.objectAtIndex(indexPath.row) as UIColor)
+        }
     }
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath){
-        
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as UICollectionViewCell?
+        if cell != nil{
+            self.setColorCell(cell, selected:false)
+        }
     }
     
     
@@ -181,10 +179,9 @@ class ColorPickerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         self.selectionBorderColor = UIColor.whiteColor();
         
         
-        
         // Collection view setup
         
-        self.colorView = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+        self.colorView = UICollectionView(frame: self.frame, collectionViewLayout: UICollectionViewFlowLayout())
         self.colorView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier:kColorCellIdentifier)
         self.colorView.scrollEnabled = true
         self.colorView.alwaysBounceVertical = true
@@ -195,43 +192,49 @@ class ColorPickerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         self.colorView.delegate = self
         self.colorView.dataSource = self
         
+        
         self.addSubview(self.colorView)
+        
+        println("subviews \(self.subviews) frame \(self.colorView.frame)")
     }
     /// marks a cell as selected according to "selection", does nothing is selection highlighting is disabled
     func setColorCell(cell:UICollectionViewCell!, selected: Bool){
         
         if (!selected || !self.highlightSelection) {
-            cell.contentView.layer.borderColor = nil;
-            cell.contentView.layer.borderWidth = 0;
+            cell.contentView.layer.borderColor = nil
+            cell.contentView.layer.borderWidth = 0
         }else {
-            cell.contentView.layer.borderColor = self.selectionBorderColor?.CGColor;
-            cell.contentView.layer.borderWidth = 5;
+            cell.contentView.layer.borderColor = self.selectionBorderColor?.CGColor
+            cell.contentView.layer.borderWidth = 5
         }
         
     }
     /// reloads data of collection view and sets content offset to zero
     func resetColorPicker(){
         self.colorView.setContentOffset(CGPointMake(0, 0), animated: true)
-        self.colorView.reloadData();
+        
+        
+        self.colorView.reloadData()
+        
     }
     
     
     //MARK: layout delegate
-    //FIXME: ....
-//    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
-//        let itemsPerRow: NSInteger = self.colorsPerRow
-//        //FIXME: Fix tomorrow NSInteger(self.colorCellPadding)
-//        var spaceMultiplier:NSInteger = (itemsPerRow - 1) * NSInteger(self.colorCellPadding)
-//        
-//        if spaceMultiplier <= 0 {
-//            spaceMultiplier = 0
-//        }
-//        
-//        // calculate size for 3 thumbs per line
-//        let size = CGFloat(collectionView.bounds.size.width - spaceMultiplier)/itemsPerRow as CGFloat
-//        
-//        return CGSizeMake(size, size)
-//    }
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
+        let itemsPerRow: NSInteger = self.colorsPerRow
+        //FIXME: Fix tomorrow NSInteger(self.colorCellPadding)
+        var spaceMultiplier:NSInteger = (itemsPerRow - 1) * NSInteger(self.colorCellPadding)
+        
+        if spaceMultiplier <= 0 {
+            spaceMultiplier = 0
+        }
+        
+        // calculate size for 3 thumbs per line
+        let _itemPerRow: CGFloat = CGFloat(itemsPerRow)
+        let _spaceMultiplier: CGFloat = CGFloat(spaceMultiplier)
+        let size: CGFloat = CGFloat(collectionView.bounds.size.width - CGFloat(spaceMultiplier))/_itemPerRow
+        return CGSizeMake(size, size)
+    }
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets{
         return UIEdgeInsetsMake(0,0,0,0)
     }
